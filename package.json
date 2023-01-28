@@ -1,0 +1,25 @@
+{
+  "name": "unb_module-12_employee-tracker_ren-besson",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/renbesson/unb_module-12_employee-tracker_ren-besson.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/renbesson/unb_module-12_employee-tracker_ren-besson/issues"
+  },
+  "homepage": "https://github.com/renbesson/unb_module-12_employee-tracker_ren-besson#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.4",
+    "mysql2": "^3.0.1"
+  }
+}
