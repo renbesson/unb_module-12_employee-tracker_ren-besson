@@ -1,15 +1,15 @@
-INSERT INTO departments (id, name)
-VALUES (001, "IT"),
-       (002, "Management"),
-       (003, "Human Resources"),
-       (004, "Customer Service");
+INSERT INTO departments (name)
+VALUES ("IT"),
+       ("Management"),
+       ("Human Resources"),
+       ("Customer Service");
        
 
 INSERT INTO roles (id, title, salary, department_id)
-VALUES (574, "CEO", 1034000, 002),
-       (753, "IT Technichian", 304300, 001),
-       (352, "HR Manager", 394000, 003),
-       (975, "CS Representative", 254300, 004);
+VALUES (574, "CEO", 10340, 002),
+       (753, "IT Technichian", 3043, 001),
+       (352, "HR Manager", 3940, 003),
+       (975, "CS Representative", 2543, 004);
        
 INSERT INTO employees (id, first_name, last_name, role_id, manager_id)
 VALUES (043, "Clark", "Still", 574, NULL),
