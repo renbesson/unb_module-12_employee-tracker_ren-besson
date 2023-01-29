@@ -20,7 +20,8 @@ async function main() {
       ],
     },
     {
-      message: "Please select a category of what you would like View/Add/Edit:",
+      message: (answers) =>
+        `Please select a category of what you would like to ${answers.firstAction}:`,
       type: "list",
       name: "secondAction",
       choices: [
@@ -31,23 +32,66 @@ async function main() {
     },
   ];
 
-  // Add Department Inquirer
+  const addDepartmentQuestion = {
+    message: "Please type the name of the new Department: ",
+    type: "input",
+    name: "newDepartment",
+  };
+
+  const addRoleQuestions = [
+    {
+      message: "Please type the name of the new Role: ",
+      type: "input",
+      name: "newRoleName",
+    },
+    {
+      message: "Please type the salary for the new Role: ",
+      type: "input",
+      name: "newRoleSalary",
+    },
+    {
+      message: "Please type the department ID of the new Role: ",
+      type: "input",
+      name: "newRoleDepartmentId",
+    },
+  ];
 
   // Actions
   const mainActionSwitch = async ({ firstAction, secondAction }) => {
     switch (firstAction) {
+      // View Actions
       case "view":
+        const pathView = `./db/queries/${secondAction}Query.sql`;
+        const [rows] = await db.execute(fs.readFileSync(pathView, { encoding: "utf8" }));
+        console.table(rows);
+        init();
+        break;
+      // Add Actions
+      case "add":
+        const pathAdd = `./db/inserts/${secondAction}Insert.sql`;
         switch (secondAction) {
           case "departments":
-            await queryAndShow("./db/queries/departmentsSelect.sql").then(console.table);
+            let { newDepartment } = await inquirer.prompt(addDepartmentQuestion).catch(console.log);
+            await db.execute(fs.readFileSync(pathAdd, { encoding: "utf8" }), [newDepartment]);
             init();
             break;
           case "roles":
-            await queryAndShow("./db/queries/rolesSelect.sql").then(console.table);
+            let newRole = await inquirer.prompt(addRoleQuestions).catch(console.log);
+            let newRoleArray = [
+              newRole.newRoleName,
+              newRole.newRoleSalary,
+              newRole.newRoleDepartmentId,
+            ];
+            console.log(newRoleArray);
+            /* await db.execute(fs.readFileSync(pathAdd, { encoding: "utf8" }), [
+              newRoleName,
+              newRoleSalary,
+              newRoleDepartmentId,
+            ]); */
             init();
             break;
           case "employees":
-            await queryAndShow("./db/queries/employeesSelect.sql").then(console.table);
+            await addAndShow("./db/queries/employeesQuery.sql").then(console.table);
             init();
             break;
         }
@@ -70,8 +114,8 @@ async function main() {
     console.log(`Connected to database!`)
   );
 
-  // Query database
-  const queryAndShow = async (tableName) => {
+  // Insert and Show
+  const addAndShow = async (tableName) => {
     const [rows, fields] = await db.execute(fs.readFileSync(tableName, { encoding: "utf8" }));
     return rows;
   };

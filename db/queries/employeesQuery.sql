@@ -6,7 +6,8 @@ SELECT
         roles.title AS "Job Title",
         departments.name AS Department,
         roles.salary AS Salary,
-        CONCAT(employees.first_name, " ", employees.last_name) AS Manager
+        CONCAT(managers.first_name, " ", managers.last_name) AS Manager
     FROM employees
     JOIN roles ON role_id = roles.id
-    JOIN departments ON roles.department_id = departments.id;
+    JOIN departments ON roles.department_id = departments.id
+    INNER JOIN employees managers ON managers.id = employees.manager_id;
