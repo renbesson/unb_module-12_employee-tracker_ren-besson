@@ -1,74 +1,14 @@
+const path = require("path");
+
 async function main() {
   // Adds the required packages to the app
   const inquirer = require("inquirer");
+  const fs = require("fs");
   const mysql = require("mysql2/promise");
   const conTable = require("console.table");
+  const questions = require("./public/questions");
 
   console.clear();
-
-  // Bundled questions
-  const mainQuestion = {
-    message: "Please select an action you would like to perform:",
-    type: "list",
-    name: "mainAction",
-    choices: [
-      new inquirer.Separator("----- View Options -----"),
-      { name: "View All Departments", value: "viewDepartments" },
-      { name: "View All Roles", value: "viewRoles" },
-      { name: "View All Employees", value: "viewEmployees" },
-      new inquirer.Separator("----- Add Options -----"),
-      { name: "Add a Department", value: "addRole" },
-      { name: "Add an Employee", value: "addEmployee" },
-      { name: "Add a Role", value: "addDepartment" },
-      new inquirer.Separator("----- Edit Options -----"),
-      { name: "Edit a Department", value: "editRole" },
-      { name: "Edit an Employee", value: "editEmployee" },
-      { name: "Edit a Role", value: "editDepartment" },
-    ],
-  };
-
-  // Add Department Inquirer
-
-
-  // Actions
-  const actionsSwitch = async (action) => {
-    switch (action) {
-      case "viewDepartments":
-        await queryAndShow(
-          "SELECT departments.name AS Name, departments.id AS ID FROM departments;"
-        ).then(console.table);
-        init();
-        break;
-      case "viewRoles":
-        await queryAndShow(`SELECT roles.title AS "Job Title", roles.id AS "Role ID", departments.name AS Department, roles.salary AS Salary
-        FROM roles
-        JOIN departments ON roles.department_id = departments.id;`).then(console.table);
-        init();
-        break;
-      case "viewEmployees":
-        await queryAndShow(`SELECT
-        employees.id AS "Employee ID",
-        employees.first_name AS "First Name",
-        employees.last_name AS "Last Name",
-        roles.title AS "Job Title",
-        departments.name AS Department,
-        roles.salary AS Salary,
-        CONCAT(employees.first_name, " ", employees.last_name) AS Manager
-    FROM employees
-    JOIN roles ON role_id = roles.id
-    JOIN departments ON roles.department_id = departments.id;`).then(console.table);
-        init();
-        break;
-    }
-  };
-
-  // Initializes the app
-  const init = () => {
-    inquirer
-      .prompt(mainQuestion)
-      .then(({ mainAction }) => actionsSwitch(mainAction))
-      .catch(console.log);
-  };
 
   // Access the database
   const db = await mysql.createConnection(
@@ -81,10 +21,47 @@ async function main() {
     console.log(`Connected to database!`)
   );
 
-  // Query database
-  const queryAndShow = async (tableName) => {
-    const [rows, fields] = await db.execute(`${tableName}`);
-    return rows;
+  // Actions
+  const mainActionSwitch = async ({ mainAction }) => {
+    const startsWithNumber = () => {
+      if (mainAction.startsWith("add")) return 3;
+      if (mainAction.startsWith("view")) return 4;
+      if (mainAction.startsWith("edit")) return 4;
+      if (mainAction.startsWith("delete")) return 6;
+    };
+    const category = mainAction.substring(startsWithNumber()).toLowerCase();
+    console.log(category);
+    if (mainAction.startsWith("view")) {
+      const path = `./db/queries/${category}Query.sql`;
+      const [rows] = await db.execute(fs.readFileSync(path, { encoding: "utf8" }));
+      console.table(rows);
+    } else if (mainAction.startsWith("add")) {
+      const path = `./db/inserts/${category}Insert.sql`;
+      let answersObj = await inquirer
+        .prompt(questions[`${category}AddQuestions`])
+        .catch(console.log);
+      await db.execute(fs.readFileSync(path, { encoding: "utf8" }), [...Object.values(answersObj)]);
+    } else if (mainAction.startsWith("edit")) {
+      const path = `./db/updates/${category}Update.sql`;
+      let answersObj = await inquirer
+        .prompt(questions[`${category}EditQuestions`])
+        .catch(console.log);
+      await db.execute(fs.readFileSync(path, { encoding: "utf8" }), [...Object.values(answersObj)]);
+    } else if (mainAction.startsWith("delete")) {
+      const path = `./db/deletes/${category}Delete.sql`;
+      let answersObj = await inquirer
+        .prompt(questions[`${category}DeleteQuestions`])
+        .catch(console.log);
+      if (answersObj.deleteConfirm === true) {
+        await db.execute(fs.readFileSync(path, { encoding: "utf8" }), [answersObj.deleteId]);
+      }
+    }
+    init();
+  };
+
+  // Initializes the app
+  const init = () => {
+    inquirer.prompt(questions.mainQuestion).then(mainActionSwitch).catch(console.log);
   };
 
   // Function call to initialize app
