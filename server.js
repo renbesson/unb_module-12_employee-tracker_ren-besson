@@ -18,7 +18,16 @@ async function main() {
       password: "root",
       database: "company_db",
     },
-    console.log(`Connected to database!`)
+    console.log(`
+
+    ▄    ╙▀██                                   ▄█▀█▄  ▓▀▀█▄┌▓µ
+    ,,█▄,,   ▐█ ,▄▄,      ▄▄▄µ          ,▄▄▄    ,▐█,,└╓,█▌, ╙▄,▄     ▄▄▄µ     ▄▄▄,
+    └└█▀└└   ▐██└──╙█µ  ▓█└  ╙█▄      ╒█▀─ ─▀█ ██╟███ ███▌██  ██▌  █▀└  ╟█  ██└──╙█▄
+      █⌐     ▐█     █▌ j██▓▓▓▓██      █▌     ╟▌  ╞█     ╫▌     █▌ ▐█    ▀▀ ▐█▓▓▓▓▓██
+      █µ  █▌ ▐█     █▌  █µ    ╓▌      █▌     █▌  ╞█     ╫▌     █▌ ▐█     ▓Γ╘█     ╓▌
+      ██▄▓█╒▄██▄▄ ▄▄██▄▄╙█▓▄▄█▀        ▀█▄▄▄█▀ ╓▄██▄▄ ▄▄██▄▄ ▄▄██▄▄╙█▄▄▄█▀  ╙█▓▄▄█▀
+    
+    `)
   );
 
   // Actions
@@ -30,7 +39,6 @@ async function main() {
       if (mainAction.startsWith("delete")) return 6;
     };
     const category = mainAction.substring(startsWithNumber()).toLowerCase();
-    console.log(category);
     if (mainAction.startsWith("view")) {
       const path = `./db/queries/${category}Query.sql`;
       const [rows] = await db.execute(fs.readFileSync(path, { encoding: "utf8" }));
@@ -55,6 +63,8 @@ async function main() {
       if (answersObj.deleteConfirm === true) {
         await db.execute(fs.readFileSync(path, { encoding: "utf8" }), [answersObj.deleteId]);
       }
+    } else {
+      process.exit();
     }
     init();
   };

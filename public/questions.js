@@ -26,18 +26,6 @@ const mainQuestion = {
   ],
 };
 
-const secondQuestion = {
-  message: (answers) => `Please select a category of what you would like to the action on:`,
-  type: "list",
-  name: "secondAction",
-  choices: [
-    { name: "Departments", value: "departments" },
-    { name: "Roles", value: "roles" },
-    { name: "Employees", value: "employees" },
-    { name: "Quit", value: "quit" },
-  ],
-};
-
 const departmentAddQuestions = {
   message: "Please type the name of the new Department: ",
   type: "input",
@@ -151,7 +139,6 @@ const employeeDeleteQuestions = [
 
 module.exports = {
   mainQuestion,
-  secondQuestion,
   departmentAddQuestions,
   roleAddQuestions,
   employeeAddQuestions,
