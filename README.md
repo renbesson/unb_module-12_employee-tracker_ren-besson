@@ -8,8 +8,6 @@ This is a node.js app which allows you to manager departments, roles, and employ
 
 You first need to install MySQL on somewhere. Preferably on the local host.
 
-Apply the schema on ```./db/schema.sql``` file and seeds on ```./db/seeds.sql```.
-
 Define the MySQL parameters(host, user, pasword, database) in the db variable in the server.js file.
 
 Download the files and run ```npm install```.
