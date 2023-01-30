@@ -25,5 +25,5 @@ Shall you have any question, issue, suggestion, and/or compliment, please send m
 ## Walkthrough
 
 
-https://user-images.githubusercontent.com/46001916/215389278-a17a17fe-f132-41eb-b0f6-0d5a2ae913d3.mov
+https://user-images.githubusercontent.com/46001916/215390606-c83f5c1e-4986-4e49-9c50-db4609209c18.mov
 
