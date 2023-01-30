@@ -21,6 +21,8 @@ const mainQuestion = {
     { name: "Delete Department", value: "deleteDepartment" },
     { name: "Delete Role", value: "deleteRole" },
     { name: "Delete Employee", value: "deleteEmployee" },
+    new inquirer.Separator("----- Custom Views -----"),
+    { name: "Total Salaries By Department", value: "salaryByDepartment" },
     new inquirer.Separator("----- Quit Option -----"),
     { name: "Quit", value: "quit" },
   ],

@@ -22,7 +22,7 @@ async function main() {
 
     ▄    ╙▀██                                   ▄█▀█▄  ▓▀▀█▄┌▓µ
     ,,█▄,,   ▐█ ,▄▄,      ▄▄▄µ          ,▄▄▄    ,▐█,,└╓,█▌, ╙▄,▄     ▄▄▄µ     ▄▄▄,
-    └└█▀└└   ▐██└──╙█µ  ▓█└  ╙█▄      ╒█▀─ ─▀█ ██╟███ ███▌██  ██▌  █▀└  ╟█  ██└──╙█▄
+    ███▀██   ▐██└──╙█µ  ▓█└  ╙█▄      ╒█▀─ ─▀█ ██╟███ ███▌██  ██▌  █▀└  ╟█  ██└──╙█▄
       █⌐     ▐█     █▌ j██▓▓▓▓██      █▌     ╟▌  ╞█     ╫▌     █▌ ▐█    ▀▀ ▐█▓▓▓▓▓██
       █µ  █▌ ▐█     █▌  █µ    ╓▌      █▌     █▌  ╞█     ╫▌     █▌ ▐█     ▓Γ╘█     ╓▌
       ██▄▓█╒▄██▄▄ ▄▄██▄▄╙█▓▄▄█▀        ▀█▄▄▄█▀ ╓▄██▄▄ ▄▄██▄▄ ▄▄██▄▄╙█▄▄▄█▀  ╙█▓▄▄█▀
@@ -63,6 +63,10 @@ async function main() {
       if (answersObj.deleteConfirm === true) {
         await db.execute(fs.readFileSync(path, { encoding: "utf8" }), [answersObj.deleteId]);
       }
+    } else if (mainAction === "salaryByDepartment") {
+      const path = `./db/customQueries/salaryByDepartmentQuery.sql`;
+      const [rows] = await db.execute(fs.readFileSync(path, { encoding: "utf8" }));
+      console.table(rows);
     } else {
       process.exit();
     }
